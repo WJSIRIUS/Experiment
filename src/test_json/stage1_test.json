@@ -1,0 +1,108 @@
+[
+    {
+        "question_id": 1,
+        "question_description": "您的性别",
+        "question_type": "radio",
+        "options": {
+            "A": "男",
+            "B": "女"
+        }
+    },
+    {
+        "question_id": 2,
+        "question_description": "您的年龄段",
+        "question_type": "radio",
+        "options": {
+            "A": "18岁以下",
+            "B": "18（不含）~25",
+            "C": "26（不含）~30",
+            "D": "31（不含）~40",
+            "E": "41（不含）~55",
+            "F": "55以上"
+        }
+    },
+    {
+        "question_id": 3,
+        "question_description": "您的学历（在校学生以目前攻读的学历水平为准）",
+        "question_type": "radio",
+        "options": {
+            "A": "初中及以下",
+            "B": "高中/中专",
+            "C": "大学专科",
+            "D": "大学本科",
+            "E": "硕士",
+            "F": "博士"
+        }
+    },
+    {
+        "question_id": 17,
+        "question_description": "以下哪些行为属于绿色生活方式?（多选）",
+        "question_type": "checkbox",
+        "options": {
+            "A": "垃圾分类",
+            "B": "使用可重复使用的购物袋",
+            "C": "节约用水",
+            "D": "购买有机食品"
+        }
+    },
+    {
+        "question_id": 18,
+        "question_description": "哪些行为有助于减少碳足迹?（多选）",
+        "question_type": "checkbox",
+        "options": {
+            "A": "使用公共交通",
+            "B": "减少一次性塑料使用",
+            "C": "增加肉类消费",
+            "D": "使用节能电器"
+        }
+    },
+    {
+        "question_id": 19,
+        "question_description": "以下哪一项属于可再生能源?",
+        "question_type": "radio",
+        "options": {
+            "A": "石油",
+            "B": "煤炭",
+            "C": "太阳能",
+            "D": "天然气"
+        }
+    },
+    {
+        "question_id": 20,
+        "question_description": "空气污染的主要来源包括哪些?（多选）",
+        "question_type": "checkbox",
+        "options": {
+            "A": "工业排放",
+            "B": "交通尾气",
+            "C": "植物释放的氧气",
+            "D": "生活垃圾焚烧"
+        }
+    },
+    {
+        "question_id": 33,
+        "question_description": "洗衣机使用频率",
+        "question_type": "radio",
+        "options": {
+            "A": "一天一次及以上",
+            "B": "两天一次",
+            "C": "三天一次",
+            "D": "一周一次及以下"
+        },
+        "has_dependency": true,
+        "dependency": {
+            "dependent_question_id": 3,
+            "dependent_option": "A"
+        }
+    },
+    {
+        "question_id": 34,
+        "question_description": "您认为您家除了上述提到的电器还有其他大功率电器吗",
+        "question_type": "blank",
+        "options": {},
+        "has_dependency": true,
+        "dependency": {
+            "dependent_question_id": 19,
+            "dependent_option": "B"
+        }
+    }
+]
