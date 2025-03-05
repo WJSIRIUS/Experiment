@@ -1,7 +1,7 @@
 import * as React from 'react';
 import test_data from '../test_json/stage1_test.json'
-import SingleQuestion from './single_question'
-import { saveData } from './savetool'
+import SingleQuestion from './singlequestion'
+import { saveData } from '../utils/tool'
 
 export default function Page1(props) {
 
@@ -9,7 +9,7 @@ export default function Page1(props) {
     const question_length = questions.length
     const [pagenum, setPagenum] = React.useState(0);
     const [badpages, setBadpages] = React.useState(0);
-
+    // ques : res
     const [userques, setUserques] = React.useState({});
     const [userdata, setUserdata] = React.useState([]);
 
@@ -41,7 +41,7 @@ export default function Page1(props) {
 
         let badpagesb = badpages
         while (true) {
-            if (x >= question_length){
+            if (x >= question_length) {
                 // console.log(x)
                 break
             }
@@ -64,7 +64,7 @@ export default function Page1(props) {
 
                             // choosen but not right
                             x = x + 1
-                            badpagesb=badpagesb+1
+                            badpagesb = badpagesb + 1
                             continue
                         }
 
@@ -76,12 +76,10 @@ export default function Page1(props) {
 
                         // 0 - (question_length - 1)
                         x = x + 1
-                        badpagesb=badpagesb+1
+                        badpagesb = badpagesb + 1
 
                         continue
                     }
-
-
 
                 }
                 // no has_dependency 
@@ -95,10 +93,10 @@ export default function Page1(props) {
 
         setBadpages(badpagesb)
 
-        if (x >= question_length){
+        if (x >= question_length) {
             setPagenum(xp)
             change_stage()
-        }else{
+        } else {
             setPagenum(x)
         }
 
@@ -123,19 +121,20 @@ export default function Page1(props) {
         }
         setUserdata(data)
 
-        let ques = {...userques}
+        let ques = { ...userques }
         ques[info.question_id] = info.res
         setUserques(ques)
 
     }
 
-
+    const ques_info = questions[pagenum]
+    let userinput = null
+    if (ques_info.question_id in userques) {
+        userinput = userques[ques_info.question_id]
+    }
 
     return (
-        <>
-            <SingleQuestion key={pagenum} allpagenum={question_length - badpages} changepage={change_page_number} choosedata={choosen_data} pagenum={pagenum} questioninfo={questions[pagenum]} changestage={change_stage}></SingleQuestion>
-        </>
-
+        <SingleQuestion userinput={userinput} key={pagenum} allpagenum={question_length - badpages} changepage={change_page_number} choosedata={choosen_data} pagenum={pagenum} questioninfo={ques_info} changestage={change_stage}></SingleQuestion>
     );
 }
 

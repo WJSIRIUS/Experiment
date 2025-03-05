@@ -1,14 +1,12 @@
 // import logo from './logo.svg';
-import PageControler from './components/pagecontrol';
+import PageContainerBasic from './components/pagecontrol';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-      </header>
 
-      <PageControler/>
+      <PageContainerBasic/>
 
     </div>
   );
