@@ -19,16 +19,16 @@ import { SingleResDisplaySmall } from '../utils/tool';
 
 
 export default function Page2Table(props) {
-    const groupnum = props.groupnum
+    const groupid = props.groupid
     const calculated_res = props.tableres
     const updatetableinfo = props.updatetableinfo
 
     const change_content = () => {
-        if (groupnum === 3 || groupnum === 4) {
+        if (groupid === 3 || groupid === 4) {
             props.changecontent(2)
 
         } else {
-            props.changecontent(3)
+            props.calculaterank(3)
         }
     }
 
@@ -193,7 +193,7 @@ export default function Page2Table(props) {
                 <Grid size={6} height={350}>
                     {/* <Skeleton height={600} /> */}
                     {/* todo */}
-                    <TableResDisplay groupnum={groupnum} calculatedres={calculated_res} changecontent={change_content} />
+                    <TableResDisplay groupid={groupid} calculatedres={calculated_res} changecontent={change_content} />
 
                 </Grid>
 
@@ -204,11 +204,11 @@ export default function Page2Table(props) {
 }
 
 function TableResDisplay(props) {
-    const groupnum = props.groupnum
+    const groupid = props.groupid
     const calculated_res = props.calculatedres
 
 
-    if (groupnum < 1 || groupnum > 4) {
+    if (groupid < 1 || groupid > 4) {
         return (<Typography variant="body2" sx={{ color: red[800] }}>Error!</Typography>)
     }
 
@@ -224,7 +224,7 @@ function TableResDisplay(props) {
                 <Grid size={12}><Typography variant="h5">结果</Typography></Grid>
 
                 {/* addition */}
-                {groupnum === 2 || groupnum === 3 ?
+                {groupid === 2 || groupid === 3 ?
                     <><Grid size={12}>
                         <Typography variant="body2" sx={{ whiteSpace: 'pre-line' }}>
                             {/* {convertstr2html("1度电电费=1个币\n结算时虚拟币不够支付电费，实验中止")} */}
@@ -233,7 +233,7 @@ function TableResDisplay(props) {
                     </Grid>
                         <Grid size={6}>
                             <SingleResDisplaySmall resname={"虚拟币"} res={calculated_res['vir_curr']} />
-                        </Grid></> : groupnum === 4 ?
+                        </Grid></> : groupid === 4 ?
 
                         <><Grid size={12}>
                             <Typography variant="caption" sx={{ whiteSpace: 'pre-line' }}>

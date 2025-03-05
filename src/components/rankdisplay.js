@@ -21,7 +21,7 @@ export default function RankDisplay(props) {
     // }
     const calculated_res = props.calculatedres
     const { elec_cons, carb_cred, vir_curr, carb_quota } = calculated_res
-    const groupnum = props.groupnum
+    const groupid = props.groupid
     const round = props.round
     const nextround = () => {
         props.nextround(round)
@@ -32,10 +32,10 @@ export default function RankDisplay(props) {
             "phrase": 0,
         })
     }
-    const roundstate = vir_curr >= 0 ? (groupnum < 4 ? (carb_quota * 2 >= elec_cons ? true : false) : true) : false
+    const roundstate = vir_curr >= 0 ? (groupid < 4 ? (carb_quota * 2 >= elec_cons ? true : false) : true) : false
 
 
-    if (groupnum < 1 || groupnum > 4) {
+    if (groupid < 1 || groupid > 4) {
         return (<Typography variant="body2" sx={{ color: red[800] }}>Error!</Typography>)
     }
 
@@ -87,7 +87,7 @@ export default function RankDisplay(props) {
                     </Grid>
 
                     {/* addition */}
-                    {groupnum > 1 ?
+                    {groupid > 1 ?
                         <Grid size={8}>
                             <SingleResDisplayBig resname={"虚拟币"} res={vir_curr} isrank={false} />
 
@@ -99,18 +99,18 @@ export default function RankDisplay(props) {
                                     </Typography> */}
 
                         </Grid> : <></>}
-                    {groupnum === 4 ?
+                    {groupid === 4 ?
                         <Grid size={8}>
                             <SingleResDisplayBig resname={"碳配额"} res={carb_quota} isrank={false} />
                         </Grid> : <></>}
                     <Grid size={8} sx={roundstate ? { color: green[800] } : { color: red[800] }}>
                         <Typography variant="option" component="div">
-                            {groupnum === 4 ? (roundstate ? "虚拟货币（和碳配额）充足，可以进入下一轮" : "虚拟货币不足或碳配额不足，实验终止") : (roundstate ? "虚拟货币充足，可以进入下一轮" : "虚拟货币不足，实验终止")}
+                            {groupid === 4 ? (roundstate ? "虚拟货币（和碳配额）充足，可以进入下一轮" : "虚拟货币不足或碳配额不足，实验终止") : (roundstate ? "虚拟货币充足，可以进入下一轮" : "虚拟货币不足，实验终止")}
                         </Typography>
                     </Grid>
 
                     <Grid size={8}>
-                        <Button variant="contained" disabled={!roundstate} onClick={round === maxround ? nextstage : nextround}>{round === maxround && roundstate ? "确定" : "下一轮"}</Button>
+                        <Button variant="contained"  onClick={round === maxround ? nextstage : nextround}>{round === maxround && roundstate ? "确定" : "下一轮"}</Button>
                     </Grid>
                 </Grid>
             </Paper>

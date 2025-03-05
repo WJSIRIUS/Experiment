@@ -20,11 +20,12 @@ export function CarbonCreditExchangeSystem(props) {
     const change_content = () => {
         props.changecontent(3)
     }
-    const exchange = () => {
+    const exchange = async () => {
         // alert(`${exchange_rate}*${credit}+${vir_curr}`)
         const vircurr_tmp = exchange_rate * credit + vir_curr
         // don't change credit, because it will be used when display
-        props.changetableres({...tableres,'vir_curr':vircurr_tmp},3)
+        await props.changetableres({ ...tableres, 'vir_curr': vircurr_tmp })
+        await props.calculaterank(3)
     }
 
     return (
@@ -88,11 +89,12 @@ export function CarbonQuotaTradingSystem(props) {
     const change_content = () => {
         props.changecontent(3)
     }
-    const trade = () => {
+    const trade = async() => {
         // typeoftrade:  0 sell and 1 buy 
         const vircurr_tmp = !typeoftrade ? vir_curr - trade_rate * tradequota : vir_curr + trade_rate * tradequota
         const quota_tmp = !typeoftrade ? quota + tradequota : quota - tradequota
-        props.changetableres({...tableres,'vir_curr':vircurr_tmp,'carb_quota':quota_tmp},3)
+        await props.changetableres({ ...tableres, 'vir_curr': vircurr_tmp, 'carb_quota': quota_tmp })
+        await props.calculaterank(3)
     }
 
     const handleChange = (e) => {
@@ -141,7 +143,7 @@ export function CarbonQuotaTradingSystem(props) {
                         <FormLabel id="label-changed-diy">
                             您选择交易的数量：
                         </FormLabel>
-                        <TextField size='small' id="filled-basic-changed-input" variant="filled" value={tradequota} onChange={handleChange} type='number'/>
+                        <TextField size='small' id="filled-basic-changed-input" variant="filled" value={tradequota} onChange={handleChange} type='number' />
                     </Grid>
 
                     <Grid container sx={{

@@ -17,7 +17,7 @@ export function clearData(key) {
   localStorage.removeItem(key)
 }
 
-export function saveEveryRoundData(key, round_data, round) {
+export function saveEveryRoundData(key, round_data, savestage2exp, round) {
 
   let storedData = {}
   if (round > 1) {
@@ -25,8 +25,15 @@ export function saveEveryRoundData(key, round_data, round) {
   }
   storedData = { ...storedData }
   storedData[round] = round_data
-
   localStorage.setItem(key, JSON.stringify(storedData))
+
+
+  let storedDataexp = []
+  if (round > 1) {
+    storedDataexp = JSON.parse(localStorage.getItem('savestage2exp'))
+  }
+  let storedDataexptmp = [...storedDataexp, savestage2exp]
+  localStorage.setItem('savestage2exp', JSON.stringify(storedDataexptmp))
 }
 
 
@@ -116,4 +123,63 @@ export function group4electricitybill(elec_cons, carb_quota) {
 
   }
   return elec_bill
+}
+
+export function getStage1answer(questions) {
+  const stage1answer = questions.map((question, index) => {
+    console.log(question)
+
+    // 选择范围 比如count = 1，那就只能选A，
+    let optionscount = 1
+    if (question['question_type'].includes('matrix')) {
+      if (question['question_type'].includes('text')) {
+        optionscount = question['options']['sub_question_description'].length
+      } else {
+        optionscount = question['options']['sub_options'].length
+      }
+    } else if (question['question_type'] === 'checkbox' || question['question_type'] === 'radio') {
+      optionscount = Object.keys(question['options']).length
+    }
+    const answer = {
+      questionid: question['question_id'],
+      questiontype: question['question_type'],
+      optionscount: optionscount,
+      optionschoice: question['userres'],
+    }
+    return answer
+  })
+  return stage1answer
+}
+
+export function getStage2exp(tableinfo, tableres, userrank, randomrate, round) {
+
+  const stage2exp = {
+    roundid: round,
+    state: true,
+    userinput: {
+      electricityused: tableinfo['elec_used'],
+      transportratio: tableinfo['pub_trans_rate'],
+      garbagedays: tableinfo['garb_days'],
+    },
+    roundresult: {
+      electricityconsumption: tableres['elec_cons'],
+      carboncredit: tableres['carb_cred'],
+      roundvirtualcurrency: tableres['vir_curr'],
+      endvirtualcurrency: tableres['elec_cons'],
+      carbonquota: tableres['carb_quota'],
+    },
+    roundrate: {
+      virtualcurrencyrate: randomrate['vir_curr_rate'],
+      carboncreditexchangerate: randomrate['carb_cred_exchange_rate'],
+      carbonquotarate: randomrate['carb_quota_rate'],
+      carbonquotatraderate: randomrate['carb_quota_trade_rate'],
+    },
+    roundrank: {
+      electricityconsumptionrank: userrank['elec_cons_rank'],
+      carboncreditrank: userrank['carb_cred_rank'],
+    }
+
+  }
+
+  return stage2exp
 }

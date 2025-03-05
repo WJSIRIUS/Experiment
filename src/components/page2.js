@@ -1,5 +1,5 @@
 import * as React from 'react';
-import test_data from '../test_json/stage1_test.json'
+
 import { TipPage } from './notice';
 import Box from '@mui/material/Box';
 import Page2Table from './table';
@@ -9,8 +9,12 @@ import ErrorPage from './error';
 import { saveEveryRoundData, group4electricitybill, roundupfloat } from '../utils/tool';
 import { MonthlyDays, RoundRateInterval } from '../utils/alllongtext';
 import Alert from '@mui/material/Alert';
-import IconButton from '@mui/material/IconButton';
+
 import Snackbar from '@mui/material/Snackbar';
+import { getRoundRank, postSubmitResult } from '../utils/api';
+import IfBackDrop from './ifbackdrop';
+import { getStage2exp, loadData } from '../utils/tool';
+
 
 export default function Page2(props) {
 
@@ -18,8 +22,11 @@ export default function Page2(props) {
         'openalert': true,
         'round_vir_curr': 0,
     });
+    const starttime = props.starttime
     const stage1data = props.stage1data
-    const groupnum = props.groupnum
+    const groupid = props.groupid
+    const userid = props.userid
+    const round = props.round
 
     const [randomrate, setRandomrate] = React.useState({
         'vir_curr_rate': 0,
@@ -69,23 +76,102 @@ export default function Page2(props) {
         }
     }, [contentnum]);
 
-    const change_from_sys = (tmp, x) => {
-        setTableres({ ...tmp })
-        setContentnum(x)
 
+    const [unloadstatus, setUnloadstatus] = React.useState(false)
+    // stage2 close:
+    React.useEffect(() => {
+        const listener = (e) => {
+            setUnloadstatus(true)
+            e.preventDefault()
+        }
+        window.addEventListener('beforeunload', listener)
+        return () => {
+            window.removeEventListener('beforeunload', listener)
+        }
+    }, [])
+    React.useEffect(() => {
+        // send stage2
+        const postsubmit = async () => {
+            // console.log("DEBUG:", userdata)
+            const endtime = new Date
+            const stage1data = loadData('stage1')['savestage1answer']
+            const stage2data = loadData('stage2')['savestage2exp']
+
+            const data = {
+                userid: userid,
+                groupid: groupid,
+                starttime: starttime,
+                finishtime: endtime.toISOString(),
+                progress: 'onstage2',
+                answer: {
+                    stage1: stage1data,
+                    stage2: stage2data,
+                }
+            }
+            const res = await postSubmitResult(data)
+            console.log(res)
+        }
+        postsubmit().then((res) => {
+            console.log(res)
+        })
+    }, [unloadstatus])
+
+    
+    const change_from_sys = (tmp) => {
+        setTableres({ ...tmp })
     }
 
-    const couculate_rank = () => {
-        // get ranking
+    const [isbackdrop, setIsbackdrop] = React.useState(false)
+    // API: get roundly rank
+    const calculate_rank = (x = 0) => {
 
-        setUserrank({
-            'elec_cons_rank': 20,
-            'carb_cred_rank': 50,
-        })
+        setIsbackdrop(true)
+        // get ranking
+        // data: {
+        //     userid: Schema.Types.ObjectId,
+        //     groupid: { type: Number, enum: [1, 2, 3, 4] },
+        //     roundid: { type: Number, enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] },
+        //     electricityconsumption: Number,
+        //     carboncredit: Number,}
+        const data = {
+            userid: userid,
+            groupid: groupid,
+            rounid: round,
+            electricityconsumption: tableres["elec_cons"],
+            carboncredit: ['carb_cred'],
+        }
+        getRoundRank(data).then((res) => {
+            if (res) {
+                if (res['userid'] === userid && res['groupid'] === groupid && res['roundid'] === round) {
+                    const { total_count, elec_cons_count, carb_cred_count } = res
+                    // total count including it self
+                    // count > $gt
+                    // 100%
+                    const ecrank = ((elec_cons_count + 1) / total_count) * 100
+                    const ccrank = ((carb_cred_count + 1) / total_count) * 100
+                    setUserrank({
+                        'elec_cons_rank': ecrank,
+                        'carb_cred_rank': ccrank,
+                    })
+                }
+                else {
+                    throw console.error("Wrong user or group or round !!");
+                }
+
+                setIsbackdrop(false)
+
+                if (x === 3) {
+                    setContentnum(3)
+                }
+            }
+        }).catch((error) => {
+            console.log("Error in getting rank:", error);
+        });
+
     }
 
     const updateTableinfo = (newTableinfo) => {
-        const [elec_cons, carb_cred, vir_curr] = page2roundres(newTableinfo, tableres, stage1data, groupnum)
+        const [elec_cons, carb_cred, vir_curr] = page2roundres(newTableinfo, tableres, stage1data, groupid)
         setTableres({
             ...tableres,
             'elec_cons': elec_cons,
@@ -97,8 +183,8 @@ export default function Page2(props) {
     };
 
     // round
-    const round = props.round
     const nextround = (round) => {
+        const stage2exp = getStage2exp(tableinfo, tableres, userrank, randomrate, round)
         const rounddata = {
             'user_inp': tableinfo,
             'user_res': tableres,
@@ -106,9 +192,7 @@ export default function Page2(props) {
             'round_rate': randomrate,
         }
         // savedata
-        saveEveryRoundData("stage2", rounddata, round)
-
-
+        saveEveryRoundData("stage2", rounddata, stage2exp, round)
         // cleardata, setState to original
         setTableinfo({
             'elec_used': 0,
@@ -151,12 +235,13 @@ export default function Page2(props) {
         setContentnum(x)
     }
 
+
     //  tippage -> table -> res (-> system)
     let content
     switch (contentnum) {
         case 0:
             // round 0->1 starting stage2
-            content = <TipPage changecontent={change_content} groupnum={groupnum} changeround={props.changeround} />
+            content = <TipPage changecontent={change_content} groupid={groupid} changeround={props.changeround} />
             break;
         case 1:
             content = (
@@ -173,27 +258,28 @@ export default function Page2(props) {
                     </Snackbar >
 
                     <Page2Table
-                        groupnum={groupnum}
+                        groupid={groupid}
                         tableres={tableres}
                         tableinfo={tableinfo}
                         updatetableinfo={updateTableinfo}
                         changecontent={change_content}
+                        calculaterank={calculate_rank}
                     />
                 </>
             )
             break;
         case 2:
             // res
-            if (groupnum === 3) {
-                content = <CarbonCreditExchangeSystem randomrate={randomrate} tableres={tableres} changetableres={change_from_sys} changecontent={change_content} />
-            } else if (groupnum === 4) {
-                content = <CarbonQuotaTradingSystem randomrate={randomrate} tableres={tableres} changetableres={change_from_sys} changecontent={change_content} />
+            if (groupid === 3) {
+                content = <CarbonCreditExchangeSystem randomrate={randomrate} tableres={tableres} changetableres={change_from_sys} changecontent={change_content} calculaterank={calculate_rank} />
+            } else if (groupid === 4) {
+                content = <CarbonQuotaTradingSystem randomrate={randomrate} tableres={tableres} changetableres={change_from_sys} changecontent={change_content} calculaterank={calculate_rank} />
             }
             break;
 
         case 3:
             // res
-            content = <RankDisplay userrank={userrank} calculatedres={tableres} groupnum={groupnum} nextround={nextround} round={round} changecontroler={props.changecontroler}/>
+            content = <RankDisplay userrank={userrank} calculatedres={tableres} groupid={groupid} nextround={nextround} round={round} changecontroler={props.changecontroler} />
             break;
         default:
             break;
@@ -202,6 +288,7 @@ export default function Page2(props) {
     return (
         <Box>
             {content}
+            <IfBackDrop open={isbackdrop} />
         </Box>
     );
 }
@@ -225,7 +312,7 @@ function page2rounddata(rate, stage1data) {
     return [round_vir_curr, round_carb_quota]
 }
 
-function page2roundres(tableinfo, tableres, stage1data, groupnum = 0) {
+function page2roundres(tableinfo, tableres, stage1data, groupid = 0) {
     // elec_used right now
     const elec_cons = tableinfo['elec_used']
     const carb_cred = stage1data['commute_km'] * (tableinfo['pub_trans_rate'] / 100) * 0.15 * stage1data['monthly_freq_trip'] + tableinfo['garb_days'] / MonthlyDays * 0.5 * 20.8
@@ -235,7 +322,7 @@ function page2roundres(tableinfo, tableres, stage1data, groupnum = 0) {
     // + elec_used before - right now
     let vir_curr = tableres['vir_curr'] + tableres['elec_cons'] - elec_cons
     // alert(`debug: rightnow${elec_cons},before${tableres['elec_cons']},final:${vir_curr}`)
-    if (groupnum === 4) {
+    if (groupid === 4) {
         vir_curr = tableres['vir_curr'] + group4electricitybill(tableres['elec_cons'], tableres['carb_quota']) - group4electricitybill(elec_cons, tableres['carb_quota'])
         // alert(`debug: rightnow${group4electricitybill(elec_cons, tableres['carb_quota'])},before${group4electricitybill(tableres['elec_cons'], tableres['carb_quota'])},final:${vir_curr}`)
 

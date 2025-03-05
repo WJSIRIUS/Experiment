@@ -77,9 +77,7 @@ export default function SingleQuestion(props) {
     event.preventDefault()
 
     let info = question_info
-
     info["userres"] = userres
-
     props.choosedata(info)
     props.changestage()
   }
@@ -104,7 +102,7 @@ export default function SingleQuestion(props) {
                   </Paper>
                   <Paper elevation={0} sx={{ p: 3 }}>
 
-                    <Button variant="contained" type="submit" disabled={false}>Submit</Button>
+                    <Button variant="contained" type="submit" disabled={!cansubmit}>Submit</Button>
                   </Paper>
 
                 </form>
@@ -166,6 +164,7 @@ function RadioQuestion(props) {
               aria-labelledby="label-changed-diy"
               name="row-radio-buttons-group"
               onChange={handleChange}
+              sx={{ justifyContent: 'center' }}
             >
               {options_keys.map((key, index) => {
                 return (
@@ -241,6 +240,8 @@ function CheckboxQuestion(props) {
             aria-labelledby="label-changed-diy"
             name="row-radio-buttons-group"
             onChange={handleChange}
+            sx={{ justifyContent: 'center' }}
+
           >
             {options_keys.map((key, index) => {
               return (
@@ -354,6 +355,7 @@ function MatrixRadioQuestion(props) {
                   name="row-radio-buttons-group"
                   onChange={(e) => handleChange(e, index)}
                   key={`matrixradio-${props.questionid}-${key}`}
+
                 >
                   <Grid container direction='row' sx={{ justifyContent: 'center', alignItems: 'center' }} spacing={2} size={12}>
                     <Grid size={4}>
@@ -449,8 +451,9 @@ function canGoNextQuestion(question_type, question_options_len, res) {
   if (question_type === QuestionTypes[0] || question_type === QuestionTypes[1] || question_type === QuestionTypes[2]) {
     if (res.length !== 0) {
       let notnull = true
-      for (const sr in res) {
-        if (sr === undefined) {
+      for (const sri in res) {
+        const sr = res[sri]
+        if (sr === undefined || sr === null || sr === -1) {
           notnull = false
           break
         }
@@ -461,10 +464,12 @@ function canGoNextQuestion(question_type, question_options_len, res) {
     }
 
   } else if (question_type === QuestionTypes[3] || question_type === QuestionTypes[4]) {
+    console.log("DEBUG : ", question_type, question_options_len, res.length)
     if (res.length === question_options_len) {
       let notnull = true
-      for (const sr in res) {
-        if (sr === undefined) {
+      for (const sri in res) {
+        const sr = res[sri]
+        if (sr === undefined || sr === null || sr === -1) {
           notnull = false
           break
         }

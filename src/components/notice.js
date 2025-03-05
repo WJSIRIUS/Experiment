@@ -81,7 +81,7 @@ export function NoticePage(props) {
 }
 
 export function TipPage(props) {
-    const groupnum = props.groupnum
+    const groupid = props.groupid
     const change_content = () => {
         // 0 1 2 3 three or four pages
         let x = 1
@@ -93,7 +93,7 @@ export function TipPage(props) {
         // than the round turn to 1
 
     }
-    const tip = stage2_tippages[groupnum - 1].split('\n').map((val, ind) => (<p key={ind}>{val}</p>))
+    const tip = stage2_tippages[groupid - 1].split('\n').map((val, ind) => (<p key={ind}>{val}</p>))
 
 
 
@@ -102,7 +102,7 @@ export function TipPage(props) {
             <Paper elevation={0} sx={{ height: '100%' }}>
                 <Grid direction={'column'} container sx={{ p: 3, height: '100%', justifyContent: 'center', alignItems: 'center' }} spacing={3}>
                     <Grid>
-                        <Typography variant="h4">第{groupnum}组的实验内容</Typography>
+                        <Typography variant="h4">第{groupid}组的实验内容</Typography>
                     </Grid>
                     <Grid size={6}>
                         <Typography variant="subtitle2" sx={{ textIndent: '2em', textAlign: 'left', whiteSpace: 'pre-line' }}>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import test_data from '../test_json/stage1_test.json'
+// import test_data from '../test_json/stage1_test.json'
 
 import { NoticePage } from './notice';
 import ErrorPage from './error';
@@ -23,6 +23,8 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 
 import { maxround, que11CommuteKilometers, MonthlyDays, que10TripsFrequency } from '../utils/alllongtext';
 import { loadData } from '../utils/tool';
+import { getGroupId, getSurvey, postSubmitResult } from '../utils/api';
+import IfBackDrop from './ifbackdrop';
 
 const NAVIGATION = [
     { segment: 'experiment', title: 'Experiment' },
@@ -41,7 +43,7 @@ const NAVIGATION = [
 function CustomPageToolbar(props) {
 
     let breadcrumbs = [
-        <Button variant="text" key={'group'}>{`Group ${props.groupnum}`}</Button>
+        <Button variant="text" key={'group'}>{`Group ${props.groupid}`}</Button>
     ]
     if (props.round > 0) {
         breadcrumbs.push(<Button variant="text" key={'group'}>{`Round ${props.round}`}</Button>)
@@ -59,7 +61,7 @@ function CustomPageToolbar(props) {
 }
 
 function CustomPageHeader(props) {
-    return <PageHeader slots={{ toolbar: CustomPageToolbar }} slotProps={{ toolbar: { round: props.round, groupnum: props.groupnum } }} />;
+    return <PageHeader slots={{ toolbar: CustomPageToolbar }} slotProps={{ toolbar: { round: props.round, groupid: props.groupid } }} />;
 }
 
 
@@ -68,6 +70,8 @@ export default function PageContainerBasic(props) {
     const theme = useTheme();
     // Remove this const when copying and pasting into your project.
     const demoWindow = window ? window() : undefined;
+    const [isbackdrop, setIsbackdrop] = React.useState(true)
+    const [starttime, setStartime] = React.useState()
 
 
     // stage router
@@ -93,11 +97,90 @@ export default function PageContainerBasic(props) {
         setControler(x)
     }
 
-    // todo : get groupnum
-    const [groupnum, setGroupnum] = React.useState(1)
-    const get_groupnum = () => {
-        setGroupnum(3)
-    }
+    const [groupid, setGroupid] = React.useState(0)
+    const [userid, setUserid] = React.useState(0)
+    const [surveydata, setSurveydata] = React.useState([])
+    // API : get groupid
+    // API : get survey
+    React.useEffect(() => {
+        const initComponent = () => {
+            const promise1 = getGroupId().then((res) => {
+                if (res) {
+                    const { user_id, group_id } = res
+                    console.log(res)
+                    setGroupid(group_id)
+                    setUserid(user_id)
+                }
+
+            }).catch((error) => {
+                console.log("Error in getting group id:", error);
+                throw error;
+            });
+
+            const promise2 = getSurvey().then((res) => {
+                if (res) {
+                    const survey = res
+                    setSurveydata(survey)
+                }
+
+            }).catch((error) => {
+                console.log("Error in getting survey:", error);
+                throw error;
+            });
+
+            Promise.allSettled([promise1, promise2]).then((results) => {
+                console.log(results)
+
+                const starttime = new Date()
+                setStartime(starttime.toISOString())
+
+                setIsbackdrop(false)
+            })
+
+
+        }
+        initComponent()
+    }, [])
+
+    // submit data
+    // API : submit all data
+
+    React.useEffect(() => {
+        const submitData = () => {
+            if (controler['stage'] === 3) {
+
+                setIsbackdrop(true)
+
+                const endtime = new Date
+                const stage1data = loadData('stage1')['savestage1answer']
+                const stage2data = loadData('stage2')['savestage2exp']
+
+                const data = {
+                    userid: userid,
+                    groupid: groupid,
+                    starttime: starttime,
+                    finishtime: endtime.toISOString(),
+                    progress: 'finishedall',
+                    answer: {
+                        stage1: stage1data,
+                        stage2: stage2data,
+                    }
+                }
+                postSubmitResult(data).then((res) => {
+                    if (res) {
+                        console.log(res)
+                    }
+                    setIsbackdrop(false)
+                }).catch((error) => {
+                    console.log("Error posting submit data:", error);
+                    throw error;
+                });
+
+            }
+        }
+        submitData()
+    }, [controler['stage']])
+
 
     // round
     const [s2round, setS2round] = React.useState(0)
@@ -122,6 +205,7 @@ export default function PageContainerBasic(props) {
                 title: 'Lab.',
             }}
         >
+
             <Grid container sx={{ justifyContent: 'center' }}>
                 <Paper elevation={0} sx={{ p: 3, width: '90%', height: '100%', m: 3, minHeight: 500 }}>
                     <PageContainer
@@ -130,21 +214,25 @@ export default function PageContainerBasic(props) {
                         }}
                         slotProps={{
                             header: {
-                                round: s2round, groupnum: groupnum
+                                round: s2round, groupid: groupid
                             }
                         }}
                     >
-                        <PageControler changestage={change_stage} groupnum={groupnum} s2round={s2round} changeround={change_round} changephrase={change_phrase} changecontroler={change_controler} controler={controler} />
+                        <PageControler survey={surveydata} starttime={starttime} changestage={change_stage} groupid={groupid} userid={userid} s2round={s2round} changeround={change_round} changephrase={change_phrase} changecontroler={change_controler} controler={controler} />
                     </PageContainer >
                 </Paper>
             </Grid>
+
+            <IfBackDrop open={isbackdrop} />
+
         </AppProvider >
     );
 }
 
 export function PageControler(props) {
 
-    let questions = test_data;
+    // let questions = test_data;
+    const questions = props.survey
     const question_length = questions.length
 
     // stage 1 2
@@ -160,10 +248,13 @@ export function PageControler(props) {
     // }
 
 
-
-    const groupnum = props.groupnum
+    const userid = props.userid
+    const groupid = props.groupid
     const s2round = props.s2round
     const controler = props.controler
+    const starttime = props.starttime
+
+
 
     // useeffect to rerender father component
     React.useEffect(() => {
@@ -178,7 +269,6 @@ export function PageControler(props) {
         // when controler["stage"] change 
     }, [controler["stage"]]);
 
-
     let page
     if (controler["phrase"] === 0) {
         page = <NoticePage changephrase={props.changephrase} stage={controler["stage"]} />
@@ -188,12 +278,12 @@ export function PageControler(props) {
     } else if (controler["phrase"] === 1) {
 
         if (controler["stage"] === 1) {
-            page = <Page1 changestage={props.changecontroler} />
+            page = <Page1 changestage={props.changecontroler} groupid={groupid} userid={userid} questions={questions} starttime={starttime} />
 
         } else if (controler["stage"] === 2) {
             // stage 1 param
             const stage1data = getStage1data()
-            page = <Page2 stage1data={stage1data} changeround={props.changeround} groupnum={groupnum} round={s2round} changecontroler={props.changecontroler} />
+            page = <Page2 stage1data={stage1data} changeround={props.changeround} groupid={groupid} userid={userid} round={s2round} changecontroler={props.changecontroler} starttime={starttime} />
 
         } else {
 
@@ -234,8 +324,8 @@ function getStage1data() {
     //     'elec_consumption': ElectricityConsumption    // 上个月用电量
     // })
     return ({
-        'monthly_freq_trip': 30, // 每月出行频率
-        'commute_km': 5,               // 单次通勤距离（往返总和）
-        'elec_consumption': 300    // 上个月用电量
+        'monthly_freq_trip': MonthlyFrequencyTrip, // 每月出行频率
+        'commute_km': CommuteKilometer,               // 单次通勤距离（往返总和）
+        'elec_consumption': ElectricityConsumption    // 上个月用电量
     })
 }
