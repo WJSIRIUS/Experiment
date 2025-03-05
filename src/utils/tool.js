@@ -127,8 +127,7 @@ export function group4electricitybill(elec_cons, carb_quota) {
 
 export function getStage1answer(questions) {
   const stage1answer = questions.map((question, index) => {
-    console.log(question)
-
+    // console.log(question)
     // 选择范围 比如count = 1，那就只能选A，
     let optionscount = 1
     if (question['question_type'].includes('matrix')) {

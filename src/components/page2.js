@@ -93,7 +93,7 @@ export default function Page2(props) {
         // send stage2
         const postsubmit = async () => {
             // console.log("DEBUG:", userdata)
-            const endtime = new Date
+            const endtime = new Date()
             const stage1data = loadData('stage1')['savestage1answer']
             const stage2data = loadData('stage2')['savestage2exp']
 
@@ -116,7 +116,7 @@ export default function Page2(props) {
         })
     }, [unloadstatus])
 
-    
+
     const change_from_sys = (tmp) => {
         setTableres({ ...tmp })
     }
@@ -142,21 +142,23 @@ export default function Page2(props) {
         }
         getRoundRank(data).then((res) => {
             if (res) {
-                if (res['userid'] === userid && res['groupid'] === groupid && res['roundid'] === round) {
-                    const { total_count, elec_cons_count, carb_cred_count } = res
-                    // total count including it self
-                    // count > $gt
-                    // 100%
-                    const ecrank = ((elec_cons_count + 1) / total_count) * 100
-                    const ccrank = ((carb_cred_count + 1) / total_count) * 100
-                    setUserrank({
-                        'elec_cons_rank': ecrank,
-                        'carb_cred_rank': ccrank,
-                    })
-                }
-                else {
-                    throw console.error("Wrong user or group or round !!");
-                }
+                // if (res['userid'] === userid && res['groupid'] === groupid && res['roundid'] === round) {
+                const { total_count, elec_cons_count, carb_cred_count } = res
+                // total count including it self
+                // count > $gt
+                // 100%
+                const ecrank = ((elec_cons_count + 1) / total_count) * 100
+                const ccrank = ((carb_cred_count + 1) / total_count) * 100
+
+                // console.log(res)
+                setUserrank({
+                    'elec_cons_rank': ecrank,
+                    'carb_cred_rank': ccrank,
+                })
+                // }
+                // else {
+                //     throw console.error("Wrong user or group or round !!");
+                // }
 
                 setIsbackdrop(false)
 

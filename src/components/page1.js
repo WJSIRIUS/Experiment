@@ -40,70 +40,50 @@ export default function Page1(props) {
         })
     }
 
-
     const change_page_number = (x) => {
-        const xp = x
+        let nextPage = x;
+        let newBadPages = badpages;
 
-        let badpagesb = badpages
-        while (true) {
-            if (x >= question_length) {
-                // console.log(x)
-                break
+        // 检查依赖关系
+        const checkDependency = (question) => {
+            if (!question.has_dependency) return true; // 没有依赖关系，直接显示
+
+            const { dependent_question_id, dependent_option } = question.dependency;
+
+            // 检查依赖的题目是否已回答，并且答案是否匹配
+            if (dependent_question_id in userques) {
+                return userques[dependent_question_id] === dependent_option;
             }
 
-            // console.log(x)
-            // console.log(questions[x])
+            return false; // 依赖的题目未回答，不显示当前题目
+        };
 
-            if ("has_dependency" in questions[x]) {
+        // 查找下一个满足条件的题目
+        while (nextPage < question_length) {
+            const currentQuestion = questions[nextPage];
 
-                if (questions[x]["has_dependency"]) {
-
-                    // question_num, question_option
-                    let dependency = [questions[x]["dependency"]["dependent_question_id"], questions[x]["dependency"]["dependent_option"]]
-
-                    if (dependency[0] in userques) {
-
-                        // todo: if multi options?
-                        if (dependency[1] !== userques[dependency[0]]) {
-
-                            // choosen but not right
-                            x = x + 1
-                            badpagesb = badpagesb + 1
-                            continue
-                        }
-
-                        break
-
-                    } else {
-                        // not yet or havn"t choosen
-
-
-                        // 0 - (question_length - 1)
-                        x = x + 1
-                        badpagesb = badpagesb + 1
-
-                        continue
-                    }
-
-                }
-                // no has_dependency 
-
-                break
+            if (checkDependency(currentQuestion)) {
+                break; // 找到满足条件的题目
             }
-            // no has_dependency 
-            break
+
+            // 不满足条件，跳过该题
+            nextPage++;
+            newBadPages++;
         }
 
-        setBadpages(badpagesb)
+        // 更新状态
+        setBadpages(newBadPages);
 
-        if (x >= question_length) {
-            setPagenum(xp)
-            change_stage()
+        if (nextPage >= question_length) {
+            // 超出题目范围，结束当前阶段
+            change_stage();
         } else {
-            setPagenum(x)
+            // 更新当前页码
+            setPagenum(nextPage);
         }
+    };
 
-    }
+
     const choosen_data = (info) => {
 
         // "question_id":"res"
@@ -126,7 +106,8 @@ export default function Page1(props) {
 
         // only res
         let ques = { ...userques }
-        ques[info.question_id] = info.res
+        ques[info.question_id] = info.userres
+        // console.log('DEBUG:', ques)
         setUserques(ques)
 
     }
@@ -156,7 +137,7 @@ export default function Page1(props) {
         const postsubmit = async () => {
             // console.log("DEBUG:", userdata)
 
-            const endtime = new Date
+            const endtime = new Date()
             const stage1data = getStage1answer(userdata)
 
             const data = {
@@ -181,7 +162,7 @@ export default function Page1(props) {
 
 
     return (
-        <SingleQuestion userinput={userinput} key={pagenum} allpagenum={question_length - badpages} changepage={change_page_number} choosedata={choosen_data} pagenum={pagenum} questioninfo={ques_info} changestage={change_stage}></SingleQuestion>
+        <SingleQuestion userinput={userinput} key={pagenum} questionslength={question_length} allpagenum={question_length - badpages} changepage={change_page_number} choosedata={choosen_data} pagenum={pagenum} questioninfo={ques_info} changestage={change_stage}></SingleQuestion>
     );
 }
 

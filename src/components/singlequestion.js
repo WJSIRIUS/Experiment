@@ -30,6 +30,8 @@ export default function SingleQuestion(props) {
 
   const page_num = props.pagenum
   const all_page_num = props.allpagenum
+  const questions_length = props.questionslength
+
 
   // res that user choose or input before
   // const user_input = props.userinput
@@ -82,13 +84,12 @@ export default function SingleQuestion(props) {
     props.changestage()
   }
 
-  // todo
   const cansubmit = canGoNextQuestion(question_type, question_type === QuestionTypes[3] || question_type === QuestionTypes[4] ? question_options['sub_question_description'].length : question_options.length, userres)
-
+  console.log("DEBUG:", page_num)
   return (
     <>
       {
-        page_num > all_page_num ? <ErrorPage reason={"page_num > all_page_num"} /> : (
+        page_num > questions_length + 1 ? <ErrorPage reason={"page_num > all_page_num"} /> : (
           <Paper elevation={0}>
             {/* {question_info.question_description} */}
 
@@ -401,7 +402,7 @@ function MatrixTextQuestion(props) {
   React.useEffect(() => {
     props.uploadres(selectedValues)
   }, [selectedValues])
-  console.log(selectedValues)
+  // console.log(selectedValues)
 
   return (
     <Paper elevation={0} sx={{ height: '100%', p: 5 }}>
@@ -464,7 +465,7 @@ function canGoNextQuestion(question_type, question_options_len, res) {
     }
 
   } else if (question_type === QuestionTypes[3] || question_type === QuestionTypes[4]) {
-    console.log("DEBUG : ", question_type, question_options_len, res.length)
+    // console.log("DEBUG : ", question_type, question_options_len, res.length)
     if (res.length === question_options_len) {
       let notnull = true
       for (const sri in res) {

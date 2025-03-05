@@ -151,7 +151,7 @@ export default function PageContainerBasic(props) {
 
                 setIsbackdrop(true)
 
-                const endtime = new Date
+                const endtime = new Date()
                 const stage1data = loadData('stage1')['savestage1answer']
                 const stage2data = loadData('stage2')['savestage2exp']
 
@@ -283,6 +283,7 @@ export function PageControler(props) {
         } else if (controler["stage"] === 2) {
             // stage 1 param
             const stage1data = getStage1data()
+            console.log("DEBUG:",stage1data)
             page = <Page2 stage1data={stage1data} changeround={props.changeround} groupid={groupid} userid={userid} round={s2round} changecontroler={props.changecontroler} starttime={starttime} />
 
         } else {
@@ -305,6 +306,7 @@ export function PageControler(props) {
 function getStage1data() {
 
     const stage1data = loadData('stage1')
+    // console.log("DEBUG:",stage1data)
     // 10. 您每月的外出频率（往返记为一次） [单选题] *
     // INT MonthlyTrip frequency per mounth
     const que10ans = stage1data['answer']['10']
