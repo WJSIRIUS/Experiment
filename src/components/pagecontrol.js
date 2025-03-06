@@ -107,7 +107,7 @@ export default function PageContainerBasic(props) {
             const promise1 = getGroupId().then((res) => {
                 if (res) {
                     const { user_id, group_id } = res
-                    console.log(res)
+                    // console.log(res)
                     setGroupid(group_id)
                     setUserid(user_id)
                 }
@@ -283,7 +283,7 @@ export function PageControler(props) {
         } else if (controler["stage"] === 2) {
             // stage 1 param
             const stage1data = getStage1data()
-            console.log("DEBUG:",stage1data)
+            // console.log("DEBUG:",stage1data)
             page = <Page2 stage1data={stage1data} changeround={props.changeround} groupid={groupid} userid={userid} round={s2round} changecontroler={props.changecontroler} starttime={starttime} />
 
         } else {

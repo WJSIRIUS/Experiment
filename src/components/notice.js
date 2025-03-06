@@ -67,7 +67,7 @@ export function NoticePage(props) {
                             <p> 感谢您的耐心参与和宝贵时间！ </p></Typography>
                     </Grid>
                     <Grid>
-                        <Button variant="contained" onClick={() => { console.log("end") }}>退出</Button>
+                        <Button variant="contained" onClick={() => { alert("end"); window.close() }}>退出</Button>
                     </Grid>
                 </Grid>
             </Paper>

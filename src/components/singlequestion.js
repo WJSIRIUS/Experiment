@@ -85,7 +85,7 @@ export default function SingleQuestion(props) {
   }
 
   const cansubmit = canGoNextQuestion(question_type, question_type === QuestionTypes[3] || question_type === QuestionTypes[4] ? question_options['sub_question_description'].length : question_options.length, userres)
-  console.log("DEBUG:", page_num)
+  // console.log("DEBUG:", page_num)
   return (
     <>
       {
