@@ -65,9 +65,12 @@ const getGroupId = async () => {
 // survey
 const getSurvey = async () => {
     try {
-        let res = await reqAxios({
-            url: '/survey',
-            method: 'get',
+        // let res = await reqAxios({
+        //     url: '/survey',
+        //     method: 'get',
+        //     responseType: 'json',
+        // })
+        let res = await reqAxios.get('/survey', {
             responseType: 'json',
         })
         return res
@@ -79,9 +82,13 @@ const getSurvey = async () => {
 // round rank
 const getRoundRank = async (data) => {
     try {
-        let res = await reqAxios({
-            url: '/rank',
-            method: 'get',
+        // let res = await reqAxios({
+        //     url: '/rank',
+        //     method: 'get',
+        //     responseType: 'json',
+        //     data: data,
+        // })
+        let res = await reqAxios.get('/rank', {
             responseType: 'json',
             data: data
         })
@@ -94,9 +101,13 @@ const getRoundRank = async (data) => {
 // submit
 const postSubmitResult = async (data) => {
     try {
-        let res = await reqAxios({
-            url: '/submit',
-            method: 'post',
+        // let res = await reqAxios({
+        //     url: '/submit',
+        //     method: 'post',
+        //     responseType: 'json',
+        //     data: data,
+        // })
+        let res = await reqAxios.post('/submit', {
             responseType: 'json',
             data: data
         })
