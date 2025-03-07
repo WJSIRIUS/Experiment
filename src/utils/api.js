@@ -1,4 +1,5 @@
 import axios from "axios";
+import questions from '../test_json/questions_v1.json'
 
 const reqAxios = axios.create(
     {
@@ -63,16 +64,27 @@ const getGroupId = async () => {
 }
 
 // survey
+// const getSurvey = async () => {
+//     try {
+//         // let res = await reqAxios({
+//         //     url: '/survey',
+//         //     method: 'get',
+//         //     responseType: 'json',
+//         // })
+//         let res = await reqAxios.get('/survey', {
+//             responseType: 'json',
+//         })
+//         return res
+//     } catch (err) {
+//         console.log(err)
+//     }
+// }
+
+
 const getSurvey = async () => {
     try {
-        // let res = await reqAxios({
-        //     url: '/survey',
-        //     method: 'get',
-        //     responseType: 'json',
-        // })
-        let res = await reqAxios.get('/survey', {
-            responseType: 'json',
-        })
+        // const res = JSON.parse(questions)
+        const res = questions
         return res
     } catch (err) {
         console.log(err)
@@ -88,6 +100,7 @@ const getRoundRank = async (data) => {
         //     responseType: 'json',
         //     data: data,
         // })
+        console.log(data)
         let res = await reqAxios.get('/rank', {
             responseType: 'json',
             data: data
