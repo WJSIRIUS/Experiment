@@ -28,12 +28,13 @@ reqAxios.interceptors.response.use(
     (res) => {
         // no token
         let data = res.data
-        // console.log(res)
-        if (typeof data === 'object') {
-            return data
-        } else if (typeof data === 'string') {
-            return JSON.parse(data)
-        }
+        console.log(res)
+        return data
+        // if (typeof data === 'object') {
+        //     return data
+        // } else if (typeof data === 'string') {
+        //     return JSON.parse(data)
+        // }
     },
     // (err) => {
     //     console.log(err.response)
