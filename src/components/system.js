@@ -37,14 +37,14 @@ export function CarbonCreditExchangeSystem(props) {
                     alignItems: "center",
                 }} spacing={3}>
                     <Grid>
-                        <Typography variant="h5">
+                        <Typography variant="h5" textAlign='center'>
                             碳积分兑换系统
                         </Typography>
 
                     </Grid>
 
                     <Grid >
-                        <Typography gutterBottom variant="body" component="div">
+                        <Typography gutterBottom variant="body" component="div" textAlign='center'>
                             目前，系统给出的碳积分兑换价格为：1积分={exchange_rate}代币 <br />
                             您是否选择全部兑换？
                             <br />
@@ -62,10 +62,10 @@ export function CarbonCreditExchangeSystem(props) {
                     <Grid container sx={{
                         justifyContent: 'space-evenly'
                     }} spacing={3} size={12}>
-                        <Grid size={4}>
+                        <Grid size={4} sx={{ alignItems: 'center' }}>
                             <Button variant="contained" onClick={exchange}>是</Button>
                         </Grid>
-                        <Grid size={4}>
+                        <Grid size={4} sx={{ alignItems: 'center' }}>
                             <Button variant="contained" onClick={change_content}>否</Button>
                         </Grid>
                     </Grid>
@@ -89,7 +89,7 @@ export function CarbonQuotaTradingSystem(props) {
     const change_content = () => {
         props.changecontent(3)
     }
-    const trade = async() => {
+    const trade = async () => {
         // typeoftrade:  0 sell and 1 buy 
         const vircurr_tmp = !typeoftrade ? vir_curr - trade_rate * tradequota : vir_curr + trade_rate * tradequota
         const quota_tmp = !typeoftrade ? quota + tradequota : quota - tradequota
@@ -112,16 +112,16 @@ export function CarbonQuotaTradingSystem(props) {
                     alignItems: "center",
                 }} spacing={3}>
                     <Grid>
-                        <Typography variant="h5">
+                        <Typography variant="h5" textAlign='center'>
                             碳配额交易系统
                         </Typography>
 
                     </Grid>
                     <Grid >
-                        <Typography gutterBottom variant="body" component="div">
+                        <Typography gutterBottom variant="body" component="div" textAlign='center'>
                             目前，市场上的碳配额价格为：1配额={trade_rate}代币
                         </Typography>
-                        <Typography variant="caption">
+                        <Typography variant="caption" textAlign='center'>
                             （请注意，碳配额不保留到下一轮）
                         </Typography>
                     </Grid>
@@ -149,10 +149,10 @@ export function CarbonQuotaTradingSystem(props) {
                     <Grid container sx={{
                         justifyContent: 'space-evenly'
                     }} spacing={3} size={12}>
-                        <Grid size={4}>
+                        <Grid size={4} sx={{ alignItems: 'center' }}>
                             <Button variant="contained" onClick={trade}>是</Button>
                         </Grid>
-                        <Grid size={4}>
+                        <Grid size={4} sx={{ alignItems: 'center' }}>
                             <Button variant="contained" onClick={change_content}>否</Button>
                         </Grid>
                     </Grid>

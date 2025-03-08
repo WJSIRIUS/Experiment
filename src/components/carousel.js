@@ -2,7 +2,6 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import React from 'react';
 import AliceCarousel from 'react-alice-carousel';
-import 'react-alice-carousel/lib/alice-carousel.css';
 import Typography from '@mui/material/Typography';
 
 
@@ -35,15 +34,13 @@ function CarouselItems() {
     const describ_texts = page2_table_carousel
     const items = degree_level.map((val, index) => {
 
-        let listdegree = describ_texts[index].split('\n').map((val) => (<p>{val}</p>))
+        let listdegree = describ_texts[index].split('\n').map((val) => (<p className='p-diy-marigin'>{val}</p>))
         return (
             <>
-                <Box key={index} height={330}>
-                    <Paper elevation={0} sx={{ p: 1, textAlign: 'center', height: '100%', paddingBottom: 0 }}>
-                        <Paper variant={"outlined"} sx={{ p: 2, height: '100%' }}>
-                            <Typography variant="subtitle2">{index}：{val}度</Typography>
-                            <Typography variant="caption" sx={{textAlign:'left'}}>{listdegree}</Typography>
-                        </Paper>
+                <Box key={index} height={330} sx={{ p: 0.5 }}>
+                    <Paper variant={"outlined"} sx={{ p: 2, m: 0.5, height: '100%', textAlign: 'center' }}>
+                        <Typography variant="subtitle2">{index}：{val}度</Typography>
+                        <Typography variant="caption" sx={{ textAlign: 'left', }}>{listdegree}</Typography>
                     </Paper>
                 </Box>
             </>

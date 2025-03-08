@@ -221,12 +221,12 @@ function TableResDisplay(props) {
                 justifyContent: 'space-evenly',
                 height: '100%'
             }} spacing={1}>
-                <Grid size={12}><Typography variant="h5">结果</Typography></Grid>
+                <Grid size={12}><Typography variant="h5" textAlign='center'>结果</Typography></Grid>
 
                 {/* addition */}
                 {groupid === 2 || groupid === 3 ?
                     <><Grid size={12}>
-                        <Typography variant="body2" sx={{ whiteSpace: 'pre-line' }}>
+                        <Typography variant="body2" sx={{ whiteSpace: 'pre-line' }} textAlign='center'>
                             {/* {convertstr2html("1度电电费=1个币\n结算时虚拟币不够支付电费，实验中止")} */}
                             {"1度电电费=1个币\n结算时虚拟币不够支付电费，实验中止"}
                         </Typography>
@@ -236,7 +236,7 @@ function TableResDisplay(props) {
                         </Grid></> : groupid === 4 ?
 
                         <><Grid size={12}>
-                            <Typography variant="caption" sx={{ whiteSpace: 'pre-line' }}>
+                            <Typography variant="caption" sx={{ whiteSpace: 'pre-line' }} textAlign='center'>
                                 {/* {convertstr2html("限额内：1度电=1个币\n限额1到2倍内：1度电=1.5个币\n达到限额的两倍，实验中止\n结算时虚拟币不够支付电费，实验中止")} */}
                                 {"限额内：1度电=1个币，限额1到2倍内：1度电=1.5个币。\n达到限额的两倍或结算时虚拟币不够支付电费，实验中止。\n"}
                             </Typography>

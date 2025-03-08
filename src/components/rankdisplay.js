@@ -41,13 +41,13 @@ export default function RankDisplay(props) {
 
     return (<>
         <Grid container sx={{ justifyContent: 'center' }}>
-            <Paper variant='outlined' sx={{ height: '100%', p: 3, width: '70%', alignItems: 'center', borderWidth: '2px' }}>
+            <Paper variant='outlined' sx={{ height: '100%', p: 3, width: '70%', borderWidth: '2px' }}>
 
                 <Grid container direction={"column"} sx={{
                     alignItems: 'center'
                 }} spacing={3}>
                     <Grid size={12}>
-                        <Typography variant="h5">
+                        <Typography variant="h5" textAlign='center'>
                             结果
                         </Typography>
 
@@ -104,13 +104,13 @@ export default function RankDisplay(props) {
                             <SingleResDisplayBig resname={"碳配额"} res={carb_quota} isrank={false} />
                         </Grid> : <></>}
                     <Grid size={8} sx={roundstate ? { color: green[800] } : { color: red[800] }}>
-                        <Typography variant="option" component="div">
+                        <Typography variant="option" component="div" textAlign='center'>
                             {groupid === 4 ? (roundstate ? "虚拟货币（和碳配额）充足，可以进入下一轮" : "虚拟货币不足或碳配额不足，实验终止") : (roundstate ? "虚拟货币充足，可以进入下一轮" : "虚拟货币不足，实验终止")}
                         </Typography>
                     </Grid>
 
-                    <Grid size={8}>
-                        <Button variant="contained"  onClick={round === maxround ? nextstage : nextround}>{round === maxround && roundstate ? "确定" : "下一轮"}</Button>
+                    <Grid size={8} sx={{ alignItems: 'center' }}>
+                        <Button variant="contained" onClick={round === maxround ? nextstage : nextround}>{round === maxround && roundstate ? "确定" : "下一轮"}</Button>
                     </Grid>
                 </Grid>
             </Paper>

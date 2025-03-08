@@ -458,7 +458,7 @@
             "C": "三天一次",
             "D": "一周一次及以下"
         },
-        "has_dependency": true,
+        "has_dependency": false,
         "dependency": null
     },
     {

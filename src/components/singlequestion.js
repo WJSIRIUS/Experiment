@@ -98,26 +98,26 @@ export default function SingleQuestion(props) {
               <Grid>
                 <form sx={{ maxWidth: '70%' }} onSubmit={page_num === all_page_num - 1 ? handleSubmitandchange : handleSubmit}>
 
-                  <Paper elevation={0} sx={{ p: 3 }}>
+                  <Grid sx={{ p: 3, alignItems: 'center' }}>
                     {content}
-                  </Paper>
-                  <Paper elevation={0} sx={{ p: 3 }}>
-
+                  </Grid>
+                  <Grid sx={{ p: 3, alignItems: 'center' }}>
                     <Button variant="contained" type="submit" disabled={!cansubmit}>Submit</Button>
-                  </Paper>
+                  </Grid>
+
 
                 </form>
               </Grid>
               <Grid sx={{ width: '100%' }}>
                 <Divider variant='middle' orientation="middle" flexItem>{page_num + 1}</Divider>
 
-                <Paper elevation={0} sx={{ p: 3 }}>
+                <Grid sx={{ p: 3, alignItems: 'center' }}>
                   {/* <Button disabled={page_num === 0 ? true : false} onClick={() => handleChangePage(page_num - 1)}>Previous Page</Button> */}
                   <Button disabled={true} onClick={() => handleChangePage(page_num - 1)}>Previous Page</Button>
-
                   {/* only turn pages after submit */}
                   {/* <Button disabled={page_num === all_page_num - 1 ? true : false} onClick={() => handleChangePage(page_num + 1)}>Next Page</Button> */}
-                </Paper>
+                </Grid>
+
               </Grid>
 
             </Grid>
@@ -272,9 +272,7 @@ function BlankQuestion(props) {
   }
 
   return (
-    <Paper elevation={0} sx={{ height: '100%', p: 5 }}>
-
-
+    <Grid container sx={{ height: '100%', p: 5 ,alignItems: 'center'}}>
       <Grid container direction='column' sx={{ justifyContent: 'center' }} spacing={1.5}>
         <Grid>
           <FormLabel id="row-radio-buttons-group-label" >
@@ -290,7 +288,7 @@ function BlankQuestion(props) {
 
         <TextField onChange={handleChange} id="filled-basic" label={props.question_description} variant="filled" />
       </Grid>
-    </Paper>
+    </Grid>
   );
 
 }
@@ -311,7 +309,8 @@ function MatrixRadioQuestion(props) {
 
   const singlerowlength = parseInt(8 / (sub_options.length + 1))
   return (
-    <Paper elevation={0} sx={{ height: '100%', p: 5 }}>
+    <Grid container sx={{ height: '100%', p: 5 ,alignItems: 'center'}}>
+
       <FormControl>
 
         <Grid container direction='column' sx={{ justifyContent: 'center' }} spacing={2}>
@@ -384,7 +383,7 @@ function MatrixRadioQuestion(props) {
         </Grid>
 
       </FormControl>
-    </Paper>
+    </Grid>
   );
 
 }

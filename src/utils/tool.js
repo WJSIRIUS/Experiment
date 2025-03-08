@@ -73,7 +73,7 @@ export function SingleResDisplaySmall(props) {
   return (
     <Box sx={{ p: 1 }}>
       <Paper variant='outlined' sx={{ p: 1 }}>
-        <Typography variant="subtitle2" component="div" color='primary'>
+        <Typography variant="subtitle2" component="div" color='primary' textAlign='center'>
           {props.resname}：
           <b>{roundupfloat(props.res)}</b>
         </Typography>
@@ -87,7 +87,7 @@ export function SingleResDisplayBig(props) {
     <Box sx={{ p: 1 }}>
       <Paper variant='outlined' sx={{ p: 1 }}>
         <Box sx={{ p: 1 }}>
-          <Typography variant="body" component="div" color='primary'>
+          <Typography variant="body" component="div" color='primary' textAlign='center'>
             {props.resname}：
             <b>{roundupfloat(props.res)}</b>
           </Typography>
@@ -96,7 +96,7 @@ export function SingleResDisplayBig(props) {
           <>
             <Divider />
             <Box sx={{ p: 1 }}>
-              <Typography variant="body" component="div" color='primary'>
+              <Typography variant="body" component="div" color='primary' textAlign='center'>
                 {props.resrankname}：
                 <b>{props.resrank}</b>
               </Typography>

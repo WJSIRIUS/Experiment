@@ -1,6 +1,6 @@
 // import logo from './logo.svg';
 import PageContainerBasic from './components/pagecontrol';
-import './App.css';
+
 
 function App() {
   return (
