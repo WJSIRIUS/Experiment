@@ -18,15 +18,17 @@ import { getStage2exp, loadData } from '../utils/tool';
 
 export default function Page2(props) {
 
-    const [openalert, setOpenalert] = React.useState({
-        'openalert': true,
-        'round_vir_curr': 0,
-    });
+
     const starttime = props.starttime
     const stage1data = props.stage1data
     const groupid = props.groupid
     const userid = props.userid
     const round = props.round
+
+    const [openalert, setOpenalert] = React.useState({
+        'openalert': groupid === 1 ? false : true,
+        'round_vir_curr': 0,
+    });
 
     const [randomrate, setRandomrate] = React.useState({
         'vir_curr_rate': 0,
@@ -34,7 +36,7 @@ export default function Page2(props) {
         'carb_quota_rate': 0,
         'carb_quota_trade_rate': 0
     })
-    const [everyroundinfo, setEveryroundinfo] = React.useState({})
+    // const [everyroundinfo, setEveryroundinfo] = React.useState({})
     // 0-tip 1-table 3(4)-res
     const [contentnum, setContentnum] = React.useState(0)
     const [tableinfo, setTableinfo] = React.useState({

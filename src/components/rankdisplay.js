@@ -100,18 +100,24 @@ export default function RankDisplay(props) {
 
                         </Grid> : <></>}
                     {groupid === 4 ?
-                        <Grid size={8}>
+                        (<Grid size={8}>
                             <SingleResDisplayBig resname={"碳配额"} res={carb_quota} isrank={false} />
-                        </Grid> : <></>}
-                    <Grid size={8} sx={roundstate ? { color: green[800] } : { color: red[800] }}>
+                        </Grid>) : <></>}
+                    {groupid !== 1 ? (<Grid size={8} sx={roundstate ? { color: green[800] } : { color: red[800] }}>
                         <Typography variant="option" component="div" textAlign='center'>
                             {groupid === 4 ? (roundstate ? "虚拟货币（和碳配额）充足，可以进入下一轮" : "虚拟货币不足或碳配额不足，实验终止") : (roundstate ? "虚拟货币充足，可以进入下一轮" : "虚拟货币不足，实验终止")}
                         </Typography>
+                    </Grid>) : <></>}
+                    <Grid size={8} sx={{ alignItems: 'center' }}>
+                        {groupid !== 1 ?
+                            // GROUP : 234 
+                            <Button variant="contained" onClick={round === maxround || !roundstate ? nextstage : nextround}>{round === maxround || !roundstate ? "确定" : "下一轮"}</Button>
+                            :
+                            // GROUP : 1
+                            <Button variant="contained" onClick={round === maxround ? nextstage : nextround}>{round === maxround ? "确定" : "下一轮"}</Button>
+                        }
                     </Grid>
 
-                    <Grid size={8} sx={{ alignItems: 'center' }}>
-                        <Button variant="contained" onClick={round === maxround || !roundstate ? nextstage : nextround}>{round === maxround || !roundstate ? "确定" : "下一轮"}</Button>
-                    </Grid>
                 </Grid>
             </Paper>
         </Grid>
