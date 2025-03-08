@@ -110,7 +110,7 @@ export default function RankDisplay(props) {
                     </Grid>
 
                     <Grid size={8} sx={{ alignItems: 'center' }}>
-                        <Button variant="contained" onClick={round === maxround ? nextstage : nextround}>{round === maxround && roundstate ? "确定" : "下一轮"}</Button>
+                        <Button variant="contained" onClick={round === maxround || !roundstate ? nextstage : nextround}>{round === maxround || !roundstate ? "确定" : "下一轮"}</Button>
                     </Grid>
                 </Grid>
             </Paper>
